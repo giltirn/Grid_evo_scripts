@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 
-#Get the plaquette from log files
-#Output to a file and use gnuplot to show
+#Parse deltaH from logs
 
 $ARGC=scalar @ARGV;
 
@@ -15,17 +14,17 @@ for($i=0;$i<$ARGC;$i++){
     push(@logs, $ARGV[$i]);
 }
 
-foreach $log (@logs){
-    #print "$log\n";
+$traj="";
 
-    #@vals=();
+foreach $log (@logs){
     open(IN, $log);
     foreach $line (<IN>){
-	if($line=~m/Plaquette:\s\[\s*(\d+)\s*\]\s([\d\.e\+\-]+)/){
-	    #push(@vals, $1);
-	    print "$1 $2\n";
+	if($line=~m/\# Trajectory = (\d+)/){
+	    $traj=$1;
+	}elsif($line=~m/Total H after trajectory.*dH = ([\d\.e\+\-]+)/){
+	    $dH=$1;
+	    print "$traj $dH\n";
 	}
     }
     close(IN);
-
-}
+ }

@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+#Filter only critical information for a specific trajectory from a log
 $ARGC = scalar(@ARGV);
 if($ARGC != 2){
     print "Need filename and trajectory\n";

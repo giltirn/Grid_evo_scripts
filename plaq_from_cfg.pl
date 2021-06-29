@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+#Get the plaquette values from the gauge configurations
 #Output to a file and use gnuplot to show
 
 $ARGC=scalar @ARGV;

@@ -1,4 +1,8 @@
 #!/usr/bin/perl
+
+#Extract the values of the impulse (F*dt) for each integrator for a specific trajectory
+#Data sets are given in descending order through the nested integrator:  [0][0],  [0][1], ... [1][0],  [1][1] ... [N][0]... [N][N]   for  [level][integrator]
+
 sub compare_sort
 {
     $a=~m/(\d+) (\d+)/;

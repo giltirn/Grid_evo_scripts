@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+#Filtering of very verbose output not necessarily interesting for a single trajectory
 $ARGC = scalar(@ARGV);
 if($ARGC != 2){
     print "Need filename and trajectory\n";
