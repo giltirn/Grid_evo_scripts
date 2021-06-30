@@ -3,7 +3,7 @@
 set -e
 
 if [[ $# == 0 ]]; then
-    echo "No arguments provided"
+    echo "Arguments ./acceptance.sh <log1> <log2> ..."
     exit 1
 fi
 
