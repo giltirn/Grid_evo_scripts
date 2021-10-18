@@ -41,6 +41,9 @@ for($i=1;$i<$ARGC;$i++){
 }
 
 %data = ();
+%data_stage = ();
+$ncomplete = 0;
+
 $traj;
 foreach $log (@logs){
     open(IN, $log);
@@ -53,13 +56,22 @@ foreach $log (@logs){
 		#print "Found start of trajectory ${traj}\n";
 		if($traj >= $start_traj){
 		    #print "Trajectory is in range\n";
-		    $active = 1;
+		    $active = 1;	    
 		}
 	    }
 	}else{
 	    if($line=~m/Total time for trajectory/){
 		#print "Found end of trajectory ${traj}\n";
 		$active = 0;
+		
+		#Found complete trajectory
+		foreach $key (keys %data_stage){
+		    $to = ${data{$key}};
+		    $from = ${data_stage{$key}};
+		    push(@{$to}, @{$from});
+		}
+		$ncomplete = $ncomplete +1;
+
 	    }elsif($line=~m/\[(\d+)\]\[(\d)\] Force average:.*Max impulse: ([\d\.e\+\-]+)/){
 		#print "$1 $2 $3\n";
 		$key = "$1 $2";
@@ -68,7 +80,7 @@ foreach $log (@logs){
 		    $data{$key} = [];
 		}
 		#print "Push to key $key\n";
-		push(@{$data{$key}}, $3);
+		push(@{$data_stage{$key}}, $3);
 	    }
 	}
     }
@@ -87,3 +99,5 @@ foreach $key (@keys_sorted){
     }
     print "\n";
 }
+
+#print "$ncomplete complete trajectories\n";
