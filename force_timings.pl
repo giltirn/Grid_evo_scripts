@@ -19,13 +19,35 @@ $active = 0;
 $max_lvl = 0;
 $max_size = 0;
 
+$refresh_start;
+$refresh_end;
+$init_S_start;
+$init_S_end;
+$final_S_start;
+$final_S_end;
+$action_eval = 0;
+
 foreach $line (<IN>){
-    if($active == 0){	 
+    if($line=~m/\:\s([\d\.]+)\ss\s\:\sIntegrator\srefresh/){
+	$refresh_start = $1;
+    }elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sIntegrator\saction/){
+	if($action_eval == 0){
+	    $refresh_end=$1;
+	    $init_S_start=$1;
+	}else{
+	    $final_S_start=$1;
+	}
+	$action_eval++;	    
+    }elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sTotal\sH\sbefore\strajectory/){
+	$init_S_end=$1;
+    }elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sTotal\sH\safter\strajectory/){
+	$final_S_end=$1;
+    }elsif($active == 0){	 
 	if($line =~m/# Trajectory = ${traj}/){
 	    $active = 1;
 	    print $line;
 	}
-    }else{
+    }else{ #active==1
 	if($line =~m/# Trajectory = ${trajp1}/){
 	    $active = 0;
 	}elsif($line =~m/\[(\d+)\]\[(\d+)\] P update.*force\:\s([\d\.e\+\-]+)\sms/){
@@ -75,7 +97,18 @@ for($i=0;$i<=${max_lvl};$i++){
 	}
     }
 }
-	    
+
+
+$refresh_hrs = ($refresh_end-$refresh_start)/60/60;
+$init_S_hrs = ($init_S_end-$init_S_start)/60/60;
+$final_S_hrs = ($final_S_end-$final_S_start)/60/60;
+$total_hrs_job = $refresh_hrs + $init_S_hrs + $total_hrs + $final_S_hrs;
+
+
+print "Refresh $refresh_hrs hrs\n";
+print "Initial action $init_S_hrs hrs\n";
+print "Final action $final_S_hrs hrs\n";
+print "Total job $total_hrs_job hrs\n";
 
 
 
