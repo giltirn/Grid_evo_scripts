@@ -28,23 +28,10 @@ $final_S_end;
 $action_eval = 0;
 
 foreach $line (<IN>){
-    if($line=~m/\:\s([\d\.]+)\ss\s\:\sIntegrator\srefresh/){
-	$refresh_start = $1;
-    }elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sIntegrator\saction/){
-	if($action_eval == 0){
-	    $refresh_end=$1;
-	    $init_S_start=$1;
-	}else{
-	    $final_S_start=$1;
-	}
-	$action_eval++;	    
-    }elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sTotal\sH\sbefore\strajectory/){
-	$init_S_end=$1;
-    }elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sTotal\sH\safter\strajectory/){
-	$final_S_end=$1;
-    }elsif($active == 0){	 
+    if($active == 0){	 
 	if($line =~m/# Trajectory = ${traj}/){
 	    $active = 1;
+	    $action_eval=0;
 	    print $line;
 	}
     }else{ #active==1
@@ -67,6 +54,20 @@ foreach $line (<IN>){
 	    if($2 > $max_size){
 		$max_size = $2;
 	    }	    
+	}elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sIntegrator\srefresh/){
+	    $refresh_start = $1;
+	}elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sIntegrator\saction/){
+	    if($action_eval == 0){
+		$refresh_end=$1;
+		$init_S_start=$1;
+	    }else{
+		$final_S_start=$1;
+	    }
+	    $action_eval++;	    
+	}elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sTotal\sH\sbefore\strajectory/){
+	    $init_S_end=$1;
+	}elsif($line=~m/\:\s([\d\.]+)\ss\s\:\sTotal\sH\safter\strajectory/){
+	    $final_S_end=$1;
 	}
     }
 }
@@ -97,7 +98,6 @@ for($i=0;$i<=${max_lvl};$i++){
 	}
     }
 }
-
 
 $refresh_hrs = ($refresh_end-$refresh_start)/60/60;
 $init_S_hrs = ($init_S_end-$init_S_start)/60/60;
