@@ -13,6 +13,7 @@ if argc < 2:
 
 #Expect data to be continguous blocks with values on each line and 
 #line breaks between
+#cf output of impulse_data_multi.pl
 
 ymax=None
 for i in range(2,argc):

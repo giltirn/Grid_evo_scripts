@@ -72,7 +72,8 @@ foreach $log (@logs){
 		}
 		$ncomplete = $ncomplete +1;
 
-	    }elsif($line=~m/\[(\d+)\]\[(\d)\] Force average:.*Max impulse: ([\d\.e\+\-]+)/){
+		#}elsif($line=~m/\[(\d+)\]\[(\d)\] Force average:.*Max impulse: ([\d\.e\+\-]+)/){
+	    }elsif($line=~m/\[(\d+)\]\[(\d)\] Fdt max\s+: ([\d\.e\+\-]+)/){
 		#print "$1 $2 $3\n";
 		$key = "$1 $2";
 		if( !( exists $data{$key}) ){
