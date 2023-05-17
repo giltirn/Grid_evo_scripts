@@ -6,12 +6,18 @@ import sys
 fig, ax = plt.subplots()
 
 argc = len(sys.argv)
-if argc != 2:
-    print("Usage: python <script.py> <log file>")
+if argc < 2:
+    print("Usage: python <script.py> <log file> [options]")
+    print("Options: -ymax <val> : set the y axis limit")
     sys.exit(1)
 
 #Expect data to be continguous blocks with values on each line and 
 #line breaks between
+
+ymax=None
+for i in range(2,argc):
+    if sys.argv[i] == "-ymax" and i<argc-1:
+        ymax=float(sys.argv[i+1])
 
 f = open(sys.argv[1])
 
@@ -39,7 +45,14 @@ labels = []
 for i in range(nsets):
     labels.append(i)
 
-ax.hist(data, bins=20, density=True, histtype="stepfilled", label=labels)
+cm = plt.get_cmap('Paired')
+colors=[]
+for i in range(len(data)):
+    colors.append(cm(i))
+
+ax.hist(data, bins=20, density=True, histtype="stepfilled", stacked=True, label=labels, color=colors)
+if ymax != None:
+    ax.set_ylim(0,ymax)
 fig.legend()
 fig.canvas.draw()
 
